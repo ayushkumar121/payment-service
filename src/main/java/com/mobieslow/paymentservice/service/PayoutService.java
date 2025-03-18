@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class PayoutService {
     public record PayoutResponse() {}
 
-    public Result<PayoutResponse, String> payout(String walletId, Double amount) {
+    public Result<PayoutResponse, String> payout(String walletId, Double amount) throws Exception {
         return Result.err("not implemented");
     }
 }

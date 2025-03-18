@@ -3,8 +3,6 @@ package com.mobieslow.paymentservice.dao.jbdc;
 import com.mobieslow.paymentservice.dao.WalletDao;
 import com.mobieslow.paymentservice.models.Wallet;
 import com.mobieslow.paymentservice.service.JdbcService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -15,8 +13,6 @@ import java.util.Optional;
 
 @Repository
 public class JdbcWalletDao implements WalletDao {
-    private static final Logger logger = LoggerFactory.getLogger(JdbcWalletDao.class);
-
     private final JdbcService jdbcService;
 
     final String getWalletQuery = "SELECT * from wallets where id=?";
@@ -28,7 +24,7 @@ public class JdbcWalletDao implements WalletDao {
     }
 
     @Override
-    public Optional<Wallet> getWallet(long walletId) {
+    public Optional<Wallet> getWallet(long walletId) throws SQLException, InterruptedException {
         Connection conn = null;
         try {
             conn = jdbcService.getConnection();
@@ -41,8 +37,6 @@ public class JdbcWalletDao implements WalletDao {
                 }
             }
 
-        } catch (Exception ex) {
-            logger.error("Unable fetch wallet: ", ex);
         } finally {
             jdbcService.releaseConnection(conn);
         }
@@ -50,7 +44,7 @@ public class JdbcWalletDao implements WalletDao {
     }
 
     @Override
-    public void transferFunds(long sourceWalletId, long targetWalletId, double amount) {
+    public void transferFunds(long sourceWalletId, long targetWalletId, double amount) throws SQLException, InterruptedException {
         assert sourceWalletId != targetWalletId;
 
         Connection conn = null;
@@ -75,19 +69,11 @@ public class JdbcWalletDao implements WalletDao {
 
             conn.commit();
         } catch (SQLException | InterruptedException ex) {
-            logger.error("Unable to execute transaction: ", ex);
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException rollbackEx) {
-                logger.error("Unable to rollback transaction: ", rollbackEx);
-            }
+            if (conn != null) conn.rollback();
+            throw ex;
         }  finally {
-            try {
-                if (conn != null) conn.setAutoCommit(true);
-                if (conn != null) jdbcService.releaseConnection(conn);
-            } catch (SQLException ex) {
-                logger.error("Unable to release connection: ", ex);
-            }
+            if (conn != null) conn.setAutoCommit(true);
+            if (conn != null) jdbcService.releaseConnection(conn);
         }
     }
 

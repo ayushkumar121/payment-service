@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Ledger {
-    private String walletId;
+    private Long walletId;
     private Double creditAmount;
     private Double debitAmount;
 }
