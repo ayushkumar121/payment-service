@@ -2,8 +2,6 @@ package com.mobieslow.paymentservice.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mobieslow.paymentservice.models.Order;
-import com.mobieslow.paymentservice.models.PaymentInstrument;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -13,7 +11,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.Optional;
 
 public class EncryptionUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -46,20 +43,5 @@ public class EncryptionUtils {
         } catch (Exception ex){
             return Result.err(ex.getMessage());
         }
-    }
-
-    public static void main(String[] args) throws JsonProcessingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        Order order = new Order();
-        order.setId("myntra_242846");
-        order.setAmount(20048.45);
-        order.setCustomerId("cust_395910AC");
-        order.setMerchantId("merch_CA03E22E");
-        order.setRedirectUrl("https://myntra.com/mobislow/payment_callback");
-        order.setPaymentInstrument(PaymentInstrument.WALLET);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String val = objectMapper.writeValueAsString(order);
-
-        System.out.println(EncryptionUtils.encrypt(val, "fRDLIX3KfkLDWGIEBBDqN8NMLeYByLTC"));
     }
 }
