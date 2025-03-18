@@ -2,10 +2,7 @@ package com.mobieslow.paymentservice.dao.jbdc;
 
 import com.mobieslow.paymentservice.dao.MerchantDao;
 import com.mobieslow.paymentservice.models.Merchant;
-import com.mobieslow.paymentservice.models.Order;
 import com.mobieslow.paymentservice.service.JdbcService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
